@@ -1,0 +1,63 @@
+{# src/WE/PlatformBundle/Resources/views/layout.html.twig #}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-language" content="fr" />
+    
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
+    
+    <!-- https://www.bootstrapcdn.com/ -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/simplex/bootstrap.min.css" rel="stylesheet" integrity="sha384-C0X5qw1DlkeV0RDunhmi4cUBUkPDTvUqzElcNWm1NI2T4k8tKMZ+wRPQOhZfSJ9N" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    
+    <title>{% block title %}WE Plateform{% endblock %}</title>
+</head>
+<body>
+    <div class="container">
+    
+        <!-- Static navbar -->
+        {{ render(controller("WEPlatformBundle:Navbar:getData")) }}
+    
+        {% block body %}
+        
+            {# On définit un sous-titre commun à toutes les pages du bundle, par exemple #}
+            <h1>Développement Symfony3</h1>
+            
+            <hr />
+            
+            {# On définit un nouveau bloc, que les vues du bundle pourront remplir #}
+            {% block weplatform_body %}{% endblock %}
+        
+        {% endblock %}
+    
+    </div>
+    
+    <style type="text/css">
+        /* Style checkbox and radio https://bootsnipp.com/tags/checkbox */
+        .radio label, .checkbox label { padding-left: 0; }
+        .checkbox label:after, 
+        .radio label:after { content: '';display: table;clear: both; }
+        .checkbox .cr,
+        .radio .cr { position: relative;display: inline-block;border: 1px solid #a9a9a9;border-radius: .25em;width: 1.3em;height: 1.3em;float: left;margin-right: .5em; }
+        .radio .cr { border-radius: 50%; }
+        .checkbox .cr .cr-icon,
+        .radio .cr .cr-icon { position: absolute;font-size: .8em;line-height: 0;top: 50%;left: 20%; }
+        .radio .cr .cr-icon { margin-left: 0.04em; }
+        .checkbox label input[type="checkbox"],
+        .radio label input[type="radio"] { display: none; }
+        .checkbox label input[type="checkbox"] + .cr > .cr-icon,
+        .radio label input[type="radio"] + .cr > .cr-icon { transform: scale(3) rotateZ(-20deg);opacity: 0;transition: all .3s ease-in; }
+        .checkbox label input[type="checkbox"]:checked + .cr > .cr-icon,
+        .radio label input[type="radio"]:checked + .cr > .cr-icon { transform: scale(1) rotateZ(0deg);opacity: 1; }
+        .checkbox label input[type="checkbox"]:disabled + .cr,
+        .radio label input[type="radio"]:disabled + .cr { opacity: .5; }
+    </style>
+</body>
+</html>

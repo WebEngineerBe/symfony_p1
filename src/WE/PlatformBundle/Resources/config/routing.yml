@@ -1,0 +1,37 @@
+we_platform_home:
+    path:     /{page}
+    defaults: {_controller: WEPlatformBundle:Advert:index, page: 1}
+    requirements: 
+        page: \d*
+
+we_platform_view:
+    path:     /advert/{id}
+    defaults: {_controller: WEPlatformBundle:Advert:view, id: 1}
+    requirements: 
+        id: \d+
+    
+we_platform_add:
+    path:     /add
+    defaults: {_controller: WEPlatformBundle:Advert:add}
+    
+we_platform_edit:
+    path:     /edit/{id}
+    defaults: {_controller: WEPlatformBundle:Advert:edit, id: 1}
+    requirements: 
+        id: \d+
+    
+we_platform_delete:
+    path:     /delete/{id}
+    defaults: {_controller: WEPlatformBundle:Advert:delete}
+    requirements: 
+        id: \d+
+    
+we_platform_jsonOrHtml:
+    path:     /jsonOrHtml/{id}
+    defaults: {_controller: WEPlatformBundle:Advert:jsonOrHtml, id: 1}
+    requirements: 
+        id: \d+
+
+we_platform_salut:
+    path:     /salut
+    defaults: {_controller: WEPlatformBundle:Advert:salut}

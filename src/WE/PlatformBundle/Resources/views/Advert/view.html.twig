@@ -1,0 +1,78 @@
+{# src/WE/PlatformBundle/Resources/view/Advert/view.html.twig #}
+
+{% extends "WEPlatformBundle::layout.html.twig" %}
+
+{% block title %}
+  Lecture d'une annonce - {{ parent() }}
+{% endblock %}
+
+{% block weplatform_body %}
+  
+  <div style="float: left; margin-right: 1em;">
+    {# On vérifie qu'une image soit bien associée à l'article #}
+    {% if advert.image is not null %}
+      <img src="{{ advert.image.url }}" alt="{{ advert.image.alt }}" height="60">
+    {% endif %}
+  </div>
+  
+  <h2>{{ advert.title }}</h2>
+  <i>Par {{ advert.author }}, le {{ advert.date|date('d/m/Y') }}</i>
+
+  <div class="well">
+    {{ advert.content }}
+  </div>
+  
+  <div>
+      <h2>Candidatures pour cette annonce</h2>
+      <ul>
+        {% for applications in listApplications %}
+          <li>Par {{ applications.author }} le {{ applications.date|date('d/m/Y') }}, <strong>{{ applications.content }}</strong></li>
+        {% endfor %}
+      </ul>
+  </div>
+
+  {% if not advert.categories.empty %}
+    <p>
+      <h3>Cette annonce est parue dans les catégories suivantes</h3>
+      {% for category in advert.categories %}
+        {{ category.name }}{% if not loop.last %}, {% else %}.{% endif %}
+      {% endfor %}
+    </p>
+  {% endif %}
+  
+  {#<pre>{{ dump(listApplications) }}</pre>#}
+  
+  {% if listAdvertSkills|length > 0 %}
+    <div>
+      <h3>Cette annonce requiert les compétences suivantes</h3>
+      <ul class="list-inline">
+        {% for advertSkill in listAdvertSkills %}
+          <li>{{ advertSkill.skill.name }} : niveau {{ advertSkill.level }},</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+  
+  <div>
+    {# On affiche tous les messages flash dont le nom est « info » #}
+    {% for message in app.session.flashbag.get('info') %}
+      <p>Message flash : {{ message }}</p>
+    {% endfor %}
+  </div>
+  
+  <p>
+    <a href="{{ path('we_platform_home') }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-chevron-left"></i>
+      Retour à la liste
+    </a>
+    <a href="{{ path('we_platform_edit', {'id': advert.id}) }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-edit"></i>
+      Modifier l'annonce
+    </a>
+    <a href="{{ path('we_platform_delete', {'id': advert.id}) }}" class="btn btn-danger">
+      <i class="glyphicon glyphicon-trash"></i>
+      Supprimer l'annonce
+    </a>
+  </p>
+
+{% endblock %}

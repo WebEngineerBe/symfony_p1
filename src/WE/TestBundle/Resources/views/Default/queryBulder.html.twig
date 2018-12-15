@@ -1,0 +1,31 @@
+{# src/OC/PlatformBundle/Resources/views/Advert/index.html.twig #}
+
+{% extends "WEPlatformBundle::layout.html.twig" %}
+
+{% block title %}
+  Tests - {{ parent() }}
+{% endblock %}
+
+{% block weplatform_body %}
+
+  <h2>Query Bulder</h2>
+
+  {#<ul>
+    {% for advert in listAdverts %}
+      <li>
+        <a href="{{ path('we_platform_view', {'id': advert.id}) }}">
+          {{ advert.title }}
+        </a>
+        par {{ advert.author }},
+        le {{ advert.date|date('d/m/Y') }}
+      </li>
+    {% else %}
+      <li>Pas (encore !) de pages</li>
+    {% endfor %}
+  </ul>#}
+  
+  {% if data is defined %}{{ dump(data) }}{% endif %}
+  {% if other is defined %}{{ dump(other) }}{% endif %}
+
+
+{% endblock %}

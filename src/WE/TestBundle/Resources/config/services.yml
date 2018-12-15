@@ -1,0 +1,17 @@
+services:
+    doctrine.listener.page_data_listener:
+        class: WE\TestBundle\Services\DoctrineListener\PageDataListener
+        #arguments: ["@service_container"]
+        arguments: ["@logger"]
+        tags:
+            #- { name: doctrine.event_listener, event: prePersist } # fonctionne sur un insert avant le persist 
+            #- { name: doctrine.event_listener, event: postPersist } # fonctionne sur un insert après le flush
+            #- { name: doctrine.event_listener, event: preUpdate } # bug
+            #- { name: doctrine.event_listener, event: postUpdate } # fonctionne sur un update après le flush
+            #- { name: doctrine.event_listener, event: postLoad } # fonctionne sur un select (le chagement d'une entité)
+            #- { name: doctrine.event_listener, event: preFlush } # fonctionne sur 
+            #- { name: doctrine.event_listener, event: postFlush }
+            #- { name: doctrine.event_listener, event: onFlush }
+            #- { name: doctrine.event_listener, event: preRemove }
+            #- { name: doctrine.event_listener, event: postRemove }
+    

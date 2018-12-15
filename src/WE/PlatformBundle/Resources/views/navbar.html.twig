@@ -1,0 +1,54 @@
+<!-- Static navbar -->
+<nav class="navbar navbar-default" style="margin-top: 20px;">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{{ path('we_test_homepage') }}">Project WE</a>
+        </div>
+        
+        <div id="navbar" class="navbar-collapse collapse">
+            {% if a_menu.left is defined %}
+                <ul class="nav navbar-nav">
+                    {% for menu in a_menu.left %}
+                        <li class="{% if menu.active %}active{% endif %} {% if menu.secondary is defined %}dropdown{% endif %}">
+                            {% if menu.secondary is not defined %}
+                                <a href="{{ menu.href }}">{{ menu.label }}</a>
+                            {% else %}
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">{{ menu.label }} <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li class="dropdown-header">Actions</li>
+                                    {% for secondary in menu.secondary %}
+                                        <li class="{% if secondary.active %}active{% endif %}"><a href="{{ secondary.href }}">{{ secondary.label }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            
+            {% if a_menu.right is defined %}
+                <ul class="nav navbar-nav navbar-right">
+                    {% for menu in a_menu.right %}
+                        <li class="{% if menu.active %}active{% endif %} {% if menu.secondary is defined %}dropdown{% endif %}">
+                            <a href="{{ menu.href }}">{% if menu.fontawesome is defined %}<i class="fa {{ menu.fontawesome }}" aria-hidden="true"></i> {% endif %}{{ menu.label }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                
+                <p class="navbar-text navbar-right">
+                    {% for menu in a_menu.right %}
+                        {% if menu.a_user is defined %}
+                            <i class="fa fa-user" aria-hidden="true"></i> {{ menu.a_user.username }} ({{ render(controller("WEUserBundle:Security:getRole", { 's_data': 'role_text' })) }})
+                        {% endif %}
+                    {% endfor %}
+                </p>
+            {% endif %}
+        </div><!--/.nav-collapse -->
+    </div><!--/.container-fluid -->
+</nav>

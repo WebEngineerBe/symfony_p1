@@ -1,0 +1,3 @@
+all:
+  website:
+    name: 'Mon site internet'

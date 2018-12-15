@@ -1,0 +1,245 @@
+<?php
+
+namespace WE\TestBundle\Entity;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Page
+ *
+ * @ORM\Table(name="we_page")
+ * @ORM\Entity(repositoryClass="WE\TestBundle\Repository\PageRepository")
+ */
+class Page
+{
+    /**
+     * @var array
+     */
+    const ENUM_TYPE = array('home', 'categorie', 'produit', 'ambiance', 'panier', 'moteur-recherche', 'contact', 'splash', 'page_desactive', 'video');
+    
+    /**
+     * @var array
+     */
+    const ENUM_STATUS = array('1', '2', '3');
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", options={"unsigned":true})
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    
+    /**
+     * J'ai ajouté cette variable pour faire la liaison inverse.
+     * Il est symétrique du inversedBy !
+     * 
+     * @ORM\OneToMany(targetEntity="WE\TestBundle\Entity\PageData", mappedBy="page")
+     */
+    private $pagesData;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="token", type="string", length=40, unique=true, options={"comment":"Token unique"})
+     */
+    private $token;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="parent_id", type="integer", options={"unsigned":true, "default":0, "comment":"Id parent"})
+     */
+    private $parentId;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="s_id", type="integer", options={"unsigned":true, "comment":"Liaison avec le champ we_site.s_id"})
+     */
+    private $sId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="type", type="string", length=60, options={"default":"produit", "comment":"Type de page"})
+     */
+    private $type;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="position", type="integer", options={"unsigned":true, "default":0, "comment":"Ordre de page"})
+     */
+    private $position;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="status", type="integer", options={"unsigned":true, "default":1, "comment":"activer = 1, supprimer = 2, supprimer définitivement = 3"})
+     */
+    private $status;
+    
+    
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set token
+     *
+     * @param string $token
+     *
+     * @return Page
+     */
+    public function setToken($token)
+    {
+        $this->token = $token;
+
+        return $this;
+    }
+
+    /**
+     * Get token
+     *
+     * @return string
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    /**
+     * Set parentId
+     *
+     * @param integer $parentId
+     *
+     * @return Page
+     */
+    public function setParentId($parentId)
+    {
+        $this->parentId = $parentId;
+
+        return $this;
+    }
+
+    /**
+     * Get parentId
+     *
+     * @return int
+     */
+    public function getParentId()
+    {
+        return $this->parentId;
+    }
+
+    /**
+     * Set sId
+     *
+     * @param integer $sId
+     *
+     * @return Page
+     */
+    public function setSId($sId)
+    {
+        $this->sId = $sId;
+
+        return $this;
+    }
+
+    /**
+     * Get sId
+     *
+     * @return int
+     */
+    public function getSId()
+    {
+        return $this->sId;
+    }
+
+    /**
+     * Set type
+     *
+     * @param string $type
+     *
+     * @return Page
+     */
+    public function setType($type)
+    {
+        if (!in_array($type, self::ENUM_TYPE)) 
+            throw new \InvalidArgumentException("Le type '$type' est invalide !");
+            
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set position
+     *
+     * @param integer $position
+     *
+     * @return Page
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+
+        return $this;
+    }
+
+    /**
+     * Get position
+     *
+     * @return int
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    /**
+     * Set status
+     *
+     * @param string $status
+     *
+     * @return Page
+     */
+    public function setStatus($status)
+    {
+        if (!in_array($status, self::ENUM_STATUS))
+            throw new \InvalidArgumentException("Le statut '$status' est invalide !");
+        
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+}

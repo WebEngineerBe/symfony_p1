@@ -1,0 +1,21 @@
+services:
+    we_platform.services.antispam:
+        class: WE\PlatformBundle\Services\Antispam\WEAntispam
+        arguments: ["@mailer", "%locale%", 5] # Tableu d'arguments
+    
+    we_platform.services.email.application_mailer:
+        class: WE\PlatformBundle\Services\Email\ApplicationMailer
+        arguments: ["@mailer", "stay0612@gmail.com"] # Tableu d'arguments
+        
+    we_platform.services.doctrine_listener.application_creation:
+        class: WE\PlatformBundle\Services\DoctrineListener\ApplicationCreationListener
+        arguments: ["@we_platform.services.email.application_mailer"] # Tableu d'arguments
+        tags:
+            - { name: doctrine.event_listener, event: postPersist }
+            
+    we_platform.services.validator.antiflood:                                         # Le nom du service
+        class: WE\PlatformBundle\Services\Validator\AntifloodValidator                # La classe du service, ici notre validateur déjà créé
+        arguments: ["@request_stack", "@doctrine.orm.entity_manager"]                 # Les données qu'on injecte au service : la requête et l'EntityManager
+        tags:
+            - { name: validator.constraint_validator, alias: we_platform_antiflood }  # C'est avec l'alias qu'on retrouvera le service
+        

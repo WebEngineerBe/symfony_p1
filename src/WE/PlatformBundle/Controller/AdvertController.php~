@@ -1,0 +1,209 @@
+<?php
+namespace WE\PlatformBundle\Controller;
+
+use WE\PlatformBundle\Entity\Advert;
+use WE\PlatformBundle\Entity\AdvertSkill;
+use WE\PlatformBundle\Entity\Application;
+use WE\PlatformBundle\Entity\Image;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
+class AdvertController extends Controller
+{
+    public function indexAction($page)
+    {
+        if ($page<1)
+            throw new NotFoundHttpException("Page $page inexistante !");
+            
+        // On récupère le service
+        $o_antispam = $this->container->get('we_platform.services.antispam');
+        // Le text à vérifier
+        $s_text = "J'ai moins de xxx caractères.";
+        // Vérifie le texts
+        if ($o_antispam->isSpam($s_text))
+            throw new \Exception('Votre message a été détecter comme spam !');
+        
+        // Notre liste d'annonce en dur
+        $listAdverts = array(
+            array(
+                'title'   => 'Recherche développpeur Symfony',
+                'id'      => 1,
+                'author'  => 'Alexandre',
+                'content' => 'Nous recherchons un développeur Symfony débutant sur Lyon. Blabla…',
+                'date'    => new \Datetime()),
+            array(
+                'title'   => 'Mission de webmaster',
+                'id'      => 2,
+                'author'  => 'Hugo',
+                'content' => 'Nous recherchons un webmaster capable de maintenir notre site internet. Blabla…',
+                'date'    => new \Datetime()),
+            array(
+                'title'   => 'Offre de stage webdesigner',
+                'id'      => 3,
+                'author'  => 'Mathieu',
+                'content' => 'Nous proposons un poste pour webdesigner. Blabla…',
+                'date'    => new \Datetime())
+        );
+            
+        return $this->render('WEPlatformBundle:Advert:index.html.twig', array(
+            'listAdverts' => $listAdverts
+        ));
+    }
+    
+    public function viewAction($id, Request $o_req)
+    {
+        // On récupère le repository
+        //$repository = $this->getDoctrine()->getManager()->getRepository('WEPlatformBundle:Advert');
+        // On récupère l'entité correspondante à l'id $id
+        //$advert = $repository->find($id);
+        // Autre syntaxe
+        //$advert = $this->getDoctrine()->getManager()->find('WEPlatformBundle:Advert', $id);
+        
+        $em = $this->getDoctrine()->getManager();
+        // On récupère l'annonce $id
+        $advert = $em->getRepository('WEPlatformBundle:Advert')->find($id);
+        
+        // $advert est donc une instance de OC\PlatformBundle\Entity\Advert
+        // ou null si l'id $id n'existe pas, d'où ce if :
+        if (null === $advert) 
+            throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
+        
+        // On récupère la liste des candidatures à cette annonce.
+        $listApplications = $em->getRepository('WEPlatformBundle:Application')->findBy(array('advert' => $advert));
+        
+        // On récupère maintenant la liste des AdvertSkill
+        $listAdvertSkills = $em->getRepository('WEPlatformBundle:AdvertSkill')->findBy(array('advert' => $advert));
+        
+        return $this->render('WEPlatformBundle:Advert:view.html.twig', array(
+            'advert' => $advert,
+            'listApplications' => $listApplications,
+            'listAdvertSkills' => $listAdvertSkills
+        ));
+    }
+    
+    public function addAction(Request $o_req)
+    {
+        // On récupère l'EntityManager
+        $em = $this->getDoctrine()->getManager();
+        
+        // Création de l'entité
+        $advert = new Advert();
+        $advert->setTitle('Offre de stage webdesigner');
+        $advert->setAuthor('Mathieu');
+        $advert->setContent("Nous proposons un poste pour webdesigner. Blabla…");
+        
+        // Création de l'entité Image
+        $image = new Image();
+        $image->setUrl('http://sdz-upload.s3.amazonaws.com/prod/upload/job-de-reve.jpg');
+        $image->setAlt('Job de rêve');
+        // On lie l'image à l'annonce
+        $advert->setImage($image);
+        
+        // Création d'une première candidature
+        $application1 = new Application();
+        $application1->setAuthor('Vincenzo');
+        $application1->setContent("J'ai toutes les qualités requises pour ce job.");
+        // Création d'une deuxième candidature par exemple
+        $application2 = new Application();
+        $application2->setAuthor('Francesca');
+        $application2->setContent("Je suis très motivé pour ce job.");
+        // On lie les candidatures à l'annonce
+        $application1->setAdvert($advert);
+        $application2->setAdvert($advert);
+        
+        // On récupère toutes les compétences possibles
+        $listSkills = $em->getRepository('WEPlatformBundle:Skill')->findAll();
+        // Pour chaque compétence
+        foreach ($listSkills as $skill) {
+            // On crée une nouvelle « relation entre 1 annonce et 1 compétence »
+            $advertSkill = new AdvertSkill();
+            // On la lie à l'annonce, qui est ici toujours la même
+            $advertSkill->setAdvert($advert);
+            // On la lie à la compétence, qui change ici dans la boucle foreach
+            $advertSkill->setSkill($skill);
+            // Arbitrairement, on dit que chaque compétence est requise au niveau 'Expert'
+            $advertSkill->setLevel('Expert');
+            // Et bien sûr, on persiste cette entité de relation, propriétaire des deux autres relations
+            $em->persist($advertSkill);
+        }
+        
+        // Étape 1 : On « persiste » l'entité
+        $em->persist($advert);
+        
+        // Étape 1 bis : si on n'avait pas défini le cascade={"persist"},
+        // on devrait persister à la main l'entité $image
+        //$em->persist($image);
+        
+        // Étape 1 ter : pour cette relation pas de cascade lorsqu'on persiste Advert, car la relation est
+        // définie dans l'entité Application et non Advert. On doit donc tout persister à la main ici.
+        $em->persist($application1);
+        $em->persist($application2);
+        
+        // Étape 2 : On « flush » tout ce qui a été persisté avant
+        $em->flush();
+        
+        // Si la requête est en POST, c'est que le visiteur a soumis le formulaire
+        if ($o_req->isMethod('POST')) {
+            $o_req->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
+            // Puis on redirige vers la page de visualisation de cettte annonce
+            return $this->redirectToRoute('we_platform_view', array('id' => $advert->getId()));
+        }
+        
+        // Si on n'est pas en POST, alors on affiche le formulaire
+        return $this->render('WEPlatformBundle:Advert:add.html.twig');
+    }
+    
+    public function editAction($id, Request $o_req)
+    {
+        $em = $this->getDoctrine()->getManager();
+        // On récupère l'annonce $id
+        $advert = $em->getRepository('WEPlatformBundle:Advert')->find($id);
+        if (null === $advert) 
+            throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
+        
+        // La méthode findAll retourne toutes les catégories de la base de données
+        $listCategories = $em->getRepository('WEPlatformBundle:Category')->findAll();
+        // On boucle sur les catégories pour les lier à l'annonce
+        foreach ($listCategories as $category) {
+            $advert->addCategory($category);
+        }
+        // Pour persister le changement dans la relation, il faut persister l'entité propriétaire
+        // Ici, Advert est le propriétaire, donc inutile de la persister car on l'a récupérée depuis Doctrine
+        // Étape 2 : On déclenche l'enregistrement
+        $em->flush();
+        
+        if ($o_req->isMethod('POST')) {
+            // Ajoute une annonce
+            $o_req->getSession()->getFlashBag()->add('notice', 'Annonce bien modifiée !');
+            // Redirige vers une autre page
+            return $this->redirectToRoute('we_platform_view', array('id' => $id));
+        }
+        
+        return $this->render('WEPlatformBundle:Advert:edit.html.twig', array(
+            'advert' => $advert
+        ));
+    }
+    
+    public function deleteAction(Request $o_req)
+    {
+        return $this->render('WEPlatformBundle:Advert:delete.html.twig');
+    }
+    
+    public function jsonOrHtmlAction($id, Request $o_req)
+    {
+        if ($o_req->isXmlHttpRequest()) {
+            return new JsonResponse(array(
+                'id' => $o_req->request->get('id'), // $_POST['id']
+                'type' => 'json'
+            ));
+        } else {
+            return $this->render('WEPlatformBundle:Advert:jsonOrHtml.html.twig', array(
+                'id' => $id, // $_GET['id']
+                'type' => 'html'
+            ));
+        }
+    }
+}

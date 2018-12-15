@@ -1,0 +1,27 @@
+we_test_homepage:
+    path:     /
+    defaults: { _controller: WETestBundle:Default:index }
+
+we_test_test0:
+    path:     /test/test0
+    defaults: { _controller: WETestBundle:Default:test0 }
+
+we_test_test1:
+    path:     /test/test1
+    defaults: { _controller: WETestBundle:Default:test1 }
+    
+we_test_test2:
+    path:     /test/test2
+    defaults: { _controller: WETestBundle:Default:test2 }
+    
+we_test_test3:
+    path:     /test/test3
+    defaults: { _controller: WETestBundle:Default:test3 }
+
+we_test_test4:
+    path:     /test/test4
+    defaults: { _controller: WETestBundle:Default:test4 }
+
+we_test_test5:
+    path:     /test/test5
+    defaults: { _controller: WETestBundle:Default:test5 }

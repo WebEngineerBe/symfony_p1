@@ -1,0 +1,35 @@
+{% extends "WEPlatformBundle::layout.html.twig" %}
+
+{% block title %}{{ parent() }} - Test Json ou HTML : anonce {{ id }}, {{ type }}{% endblock %}
+
+{% block body %}
+	<h1>Test Json ou HTML : {{ id }}, {{ type }}</h1>
+	
+    {% set foo = 'Je <strong>suis</strong> un text' %}
+    {% set prenom = 'Stéphane' %}
+	<ol>
+       <li>En majuscule : {{ foo|upper|raw }}</li>
+       <li>Combiner des filtres : {{ foo|striptags|title }}</li>
+       <li>Filtre avec arguments : {{ 'NOW'|date('d/m/Y') }}</li>
+       <li>Concatenations : {{ foo|striptags~" "~prenom }}</li>
+	</ol>
+	
+	<script type="text/javascript">
+	//<![CDATA[
+    $(function() {
+    	$.ajax({
+            url: '{{ path('we_platform_jsonOrHtml') }}',
+            type: 'POST',
+            dataType: 'json',
+            data: 'id={{ id }}',
+            success: function(json) {
+                
+            },
+            error: function(json) {
+                console.log(json.responseText);
+            }
+        });
+    });
+    //]]>
+	</script>
+{% endblock %}

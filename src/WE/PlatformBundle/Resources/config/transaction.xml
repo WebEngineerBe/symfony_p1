@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<transaction>
+    <carpediem>
+    	<phonecb>
+    		<blacklist>
+                <code>code=4003</code>
+                <code>code=4006</code>
+                <code>code=4007</code>
+                <code>code=4012</code>
+                <code>code=6006</code>
+                <code>Token Card Expired</code>
+                <code>OPPOTOTA</code>
+			</blacklist>
+    	</phonecb>
+    </carpediem>
+</transaction>

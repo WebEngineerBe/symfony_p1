@@ -1,0 +1,10 @@
+services:
+#    we_user.example:
+#        class: WE\UserBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]
+
+    # https://symfony.com/doc/3.1/security/access_denied_handler.html
+    # https://stackoverflow.com/questions/25062865/symfony2s-accessdeniedhandlerinterface-to-automatically-redirect-unauthorized-u
+    we_user.services.security.access_denied_handler:
+        class: WE\UserBundle\Services\Security\AccessDeniedHandler
+        arguments: ["@router"] # Tableu d'arguments

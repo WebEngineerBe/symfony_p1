@@ -1,0 +1,42 @@
+{# src/OC/PlatformBundle/Resources/views/Advert/edit.html.twig #}
+
+{% extends "WEPlatformBundle::layout.html.twig" %}
+
+{% block title %}Formulaire de connexion{% endblock %}
+
+{% block weplatform_body %}
+
+    <h2>Formulaire de connexion</h2>
+    
+    <div class="well">
+
+        <form action="{{ path('fos_user_security_check') }}" method="post">
+            
+            {% if error %}
+                <div class="alert alert-danger">{{ error.message }}</div>
+            {% endif %}
+            
+            <div class="form-group">
+                <label class="control-label required" for="username">Login :</label>
+                <input class="form-control" type="text" id="username" name="_username" value="{{ last_username }}" />
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label required" for="password">Mot de passe :</label>
+                <input class="form-control" type="password" id="password" name="_password" value="" />
+            </div>
+            
+            {# <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="remember_me" name="_remember_me" />
+                    <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+                    Se souvenir de moi !
+                </label>
+            </div> #}
+            
+            <input class="btn btn-default" type="submit" value="Connexion" />
+            
+        </form>
+    </div>
+    
+{% endblock %}

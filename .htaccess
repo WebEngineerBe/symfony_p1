@@ -1,0 +1,9 @@
+# start
+RewriteEngine on
+
+# domain in www
+RewriteCond %{HTTP_HOST} ^symfony01.com$
+RewriteRule ^(.*)   http://www.symfony01.com/$1  [QSA,L,R=301]
+
+# admin-divinaliz
+RewriteRule	^(.*)$				/web/app_dev.php [L]
